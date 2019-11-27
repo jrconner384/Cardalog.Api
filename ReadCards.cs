@@ -11,7 +11,8 @@ using System.Text;
 
 namespace Cardalog.Api
 {
-  // Run with `func host start --cors *` to be able to access this from the web app
+  // Run with `func host start --cors *` to be able to access this from the web app.
+  // I've also updated local.settings.json to allow CORS.
   public static class Cards
     {
         [FunctionName("ReadCards")]

@@ -6,14 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Bson;
-using MongoDB.Bson.IO;
 using System;
-using System.Collections.Generic;
+using System.Text;
 
 namespace Cardalog.Api
 {
-    // Run with `func host start --cors *` to be able to access this from the web app
-    public static class Cards
+  // Run with `func host start --cors *` to be able to access this from the web app
+  public static class Cards
     {
         [FunctionName("ReadCards")]
         public static async Task<IActionResult> Run(
@@ -26,17 +25,17 @@ namespace Cardalog.Api
                 var db = client.GetDatabase("cardalog");
                 var coll = db.GetCollection<BsonDocument>("cards");
                 var projection = Builders<BsonDocument>.Projection.Exclude("_id");
-                var cardsBson = coll.Find(new BsonDocument()).Project(projection);
-                List<string> cards = new List<string>();
-                await cardsBson.ForEachAsync(it => cards.Add(it.ToJson(new JsonWriterSettings{
-                    Indent = false,
-                    OutputMode = JsonOutputMode.Strict
-                })));
-                return new OkObjectResult(cards);
+                var cardsBson = await coll.Find(new BsonDocument()).Project(projection).ToListAsync();
+                var cards = new StringBuilder("[");
+                cardsBson.ForEach(it => cards.Append(it.ToJson()).Append(","));
+                cards.Remove(cards.Length - 1, 1).Append("]");
+
+                return (ActionResult)new OkObjectResult(cards.ToString());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return new BadRequestObjectResult(e);
+                log.LogError(e, "Something went wrong");
+                return new BadRequestObjectResult("Something went wrong.");
             }
         }
     }

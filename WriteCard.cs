@@ -49,26 +49,26 @@ namespace Cardalog.Api
         {
             return new BsonDocument
             {
-                { "Title", json.Title.ToString() },
-                { "Type", json.Type.ToString() },
-                { "Subtype", json.Subtype.ToString() },
-                { "Rarity", json.Rarity.ToString() },
-                { "Cost", json.Cost.ToString() },
-                { "ConvertedCost", (int?)json.ConvertedCost },
-                { "Text", json.Text.ToString() },
-                { "FlavorText", json.FlavorText.ToString() },
-                { "Power", (int?)json.Power },
-                { "Toughness", (int?)json.Toughness },
+                { "Title", json.title.ToString() },
+                { "Type", json.type.ToString() },
+                { "Subtype", json.subtype.ToString() },
+                { "Rarity", json.rarity.ToString() },
+                { "Cost", json.cost.ToString() },
+                { "ConvertedCost", (int?)json.convertedCost },
+                { "Text", json.text.ToString() },
+                { "FlavorText", json.flavorText.ToString() },
+                { "Power", (int?)json.power },
+                { "Toughness", (int?)json.toughness },
                 { "Expansion", new BsonDocument
                     {
-                        { "Name", json.Expansion.Name.ToString() },
-                        { "TotalCards", (int?)json.Expansion.TotalCards },
-                        { "Abbreviation", json.Expansion.Abbreviation.ToString() },
-                        { "Copyright", json.Expansion.Copyright.ToString() }
+                        { "Name", json.expansion.name.ToString() },
+                        { "TotalCards", (int?)json.expansion.totalCards },
+                        { "Abbreviation", json.expansion.abbreviation.ToString() },
+                        { "Copyright", json.expansion.copyright.ToString() }
                     }
                 },
-                { "CardNumber", (int?)json.CardNumber },
-                { "Artist", json.Artist.ToString() }
+                { "CardNumber", (int?)json.cardNumber },
+                { "Artist", json.artist.ToString() }
             };
         }
     }

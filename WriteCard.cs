@@ -17,8 +17,8 @@ namespace Cardalog.Api
     // See ./Seeds/mtg-cards.json for an example of useful JSON
     [FunctionName("WriteCard")]
     public static async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "cards")] HttpRequest req,
-        ILogger log)
+      [HttpTrigger(AuthorizationLevel.Function, "post", Route = "cards")] HttpRequest req,
+      ILogger log)
     {
       try
       {

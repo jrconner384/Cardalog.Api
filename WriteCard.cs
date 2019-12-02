@@ -49,26 +49,26 @@ namespace Cardalog.Api
         {
             return new BsonDocument
             {
-                { "Title", json.Title },
-                { "Type", json.Type },
-                { "Subtype", json.Subtype },
-                { "Rarity", json.Rarity },
-                { "Cost", json.Cost },
-                { "ConvertedCost", json.ConvertedCost },
-                { "Text", json.Text },
-                { "FlavorText", json.FlavorText },
-                { "Power", json.Power },
-                { "Toughness", json.Toughness },
+                { "Title", json.Title.ToString() },
+                { "Type", json.Type.ToString() },
+                { "Subtype", json.Subtype.ToString() },
+                { "Rarity", json.Rarity.ToString() },
+                { "Cost", json.Cost.ToString() },
+                { "ConvertedCost", (int?)json.ConvertedCost },
+                { "Text", json.Text.ToString() },
+                { "FlavorText", json.FlavorText.ToString() },
+                { "Power", (int?)json.Power },
+                { "Toughness", (int?)json.Toughness },
                 { "Expansion", new BsonDocument
                     {
-                        { "Name", json.Expansion.Name },
-                        { "TotalCards", json.Expansion.TotalCards },
-                        { "Abbreviation", json.Expansion.Abbreviation },
-                        { "Copyright", json.Expansion.Copyright }
+                        { "Name", json.Expansion.Name.ToString() },
+                        { "TotalCards", (int?)json.Expansion.TotalCards },
+                        { "Abbreviation", json.Expansion.Abbreviation.ToString() },
+                        { "Copyright", json.Expansion.Copyright.ToString() }
                     }
                 },
-                { "CardNumber", json.CardNumber },
-                { "Artist", json.Artist }
+                { "CardNumber", (int?)json.CardNumber },
+                { "Artist", json.Artist.ToString() }
             };
         }
     }

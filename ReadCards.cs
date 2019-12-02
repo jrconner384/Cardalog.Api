@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System;
-using System.Text;
 
 namespace Cardalog.Api
 {
@@ -16,30 +15,27 @@ namespace Cardalog.Api
   // Write seeds to Mongo with `mongoimport -d cardalog -c cards .\mtg-cards.json`.
   // Make sure the JSON is minified (on one line).
   public static class ReadCards
+  {
+    [FunctionName("ReadCards")]
+    public static async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "cards")] HttpRequest req,
+        ILogger log)
     {
-        [FunctionName("ReadCards")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "cards")] HttpRequest req,
-            ILogger log)
-        {
-            try
-            {
-                var client = new MongoClient("mongodb://127.0.0.1:27017");
-                var db = client.GetDatabase("cardalog");
-                var coll = db.GetCollection<BsonDocument>("cards");
-                var projection = Builders<BsonDocument>.Projection.Exclude("_id");
-                var cardsBson = await coll.Find(new BsonDocument()).Project(projection).ToListAsync();
-                var cards = new StringBuilder("[");
-                cardsBson.ForEach(it => cards.Append(it.ToJson()).Append(","));
-                cards.Remove(cards.Length - 1, 1).Append("]");
-
-                return (ActionResult)new OkObjectResult(cards.ToString());
-            }
-            catch (Exception e)
-            {
-                log.LogError(e, "Something went wrong");
-                return new BadRequestObjectResult("Something went wrong.");
-            }
-        }
+      try
+      {
+        var client = new MongoClient("mongodb://127.0.0.1:27017");
+        var db = client.GetDatabase("cardalog");
+        var coll = db.GetCollection<BsonDocument>("cards");
+        var projection = Builders<BsonDocument>.Projection.Exclude("_id");
+        var cardsBson = await coll.Find(new BsonDocument()).Project(projection).ToListAsync();
+        var cards = new BsonArray(cardsBson);
+        return (ActionResult)new OkObjectResult(cards.ToJson());
+      }
+      catch (Exception e)
+      {
+        log.LogError(e, "Something went wrong");
+        return new BadRequestObjectResult("Something went wrong.");
+      }
     }
+  }
 }

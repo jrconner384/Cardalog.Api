@@ -13,63 +13,62 @@ using Newtonsoft.Json;
 namespace Cardalog.Api
 {
   public static class WriteCard
+  {
+    // See ./Seeds/mtg-cards.json for an example of the expected JSON
+    [FunctionName("WriteCard")]
+    public static async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "cards")] HttpRequest req,
+        ILogger log)
     {
-        // See ./Seeds/mtg-cards.json for an example of the expected JSON
-        [FunctionName("WriteCard")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "cards")] HttpRequest req,
-            ILogger log)
+      try
+      {
+        var client = new MongoClient("mongodb://127.0.0.1:27017");
+        var db = client.GetDatabase("cardalog");
+        var coll = db.GetCollection<BsonDocument>("cards");
+        var body = await new StreamReader(req.Body).ReadToEndAsync();
+        dynamic data = JsonConvert.DeserializeObject(body);
+
+        if (data == null)
         {
-            try
-            {
-                var client = new MongoClient("mongodb://127.0.0.1:27017");
-                var db = client.GetDatabase("cardalog");
-                var coll = db.GetCollection<BsonDocument>("cards");
-                var body = await new StreamReader(req.Body).ReadToEndAsync();
-                // Seems quickest to start with a dynamic. Might want to look into a data types library to share amongst the UI and Functions like this.
-                dynamic data = JsonConvert.DeserializeObject(body);
-
-                if (data == null)
-                {
-                    return new BadRequestObjectResult("The request body could not be deserialized.");
-                }
-
-                var card = RequestJsonToBson(data);
-                coll.InsertOne(card);
-                return new OkObjectResult(card); // Is it appropriate to respond with the object I just inserted? Seems chatty.
-            }
-            catch (Exception e)
-            {
-                log.LogError(e, "Something went wrong.");
-                return new BadRequestObjectResult("Something went wrong.");
-            }
+          return new BadRequestObjectResult("The request body could not be deserialized.");
         }
 
-        private static BsonDocument RequestJsonToBson(dynamic json)
-        {
-            return new BsonDocument
-            {
-                { "Title", json.title.ToString() },
-                { "Type", json.type.ToString() },
-                { "Subtype", json.subtype.ToString() },
-                { "Rarity", json.rarity.ToString() },
-                { "Cost", json.cost.ToString() },
-                { "ConvertedCost", (int?)json.convertedCost },
-                { "Text", json.text.ToString() },
-                { "FlavorText", json.flavorText.ToString() },
-                { "Power", (int?)json.power },
-                { "Toughness", (int?)json.toughness },
-                { "Expansion", new BsonDocument
-                    {
-                        { "Name", json.expansion.name.ToString() },
-                        { "TotalCards", (int?)json.expansion.totalCards },
-                        { "Abbreviation", json.expansion.abbreviation.ToString() },
-                        { "Copyright", json.expansion.copyright.ToString() }
-                    }
-                },
-                { "CardNumber", (int?)json.cardNumber },
-                { "Artist", json.artist.ToString() }
-            };
-        }
+        var card = RequestJsonToBson(data);
+        coll.InsertOne(card);
+        return new OkObjectResult(card);
+      }
+      catch (Exception e)
+      {
+        log.LogError(e, "Something went wrong.");
+        return new BadRequestObjectResult("Something went wrong.");
+      }
     }
+
+    private static BsonDocument RequestJsonToBson(dynamic json)
+    {
+      return new BsonDocument
+        {
+            { "Title", (string)json.title },
+            { "Type", (string)json.type },
+            { "Subtype", (string)json.subtype },
+            { "Rarity", (string)json.rarity },
+            { "Cost", (string)json.cost },
+            { "ConvertedCost", (int?)json.convertedCost },
+            { "Text", (string)json.text },
+            { "FlavorText", (string)json.flavorText },
+            { "Power", (int?)json.power },
+            { "Toughness", (int?)json.toughness },
+            { "Expansion", new BsonDocument
+                {
+                    { "Name", (string)json.expansion.name },
+                    { "TotalCards", (int?)json.expansion.totalCards },
+                    { "Abbreviation", (string)json.expansion.abbreviation },
+                    { "Copyright", (string)json.expansion.copyright }
+                }
+            },
+            { "CardNumber", (int?)json.cardNumber },
+            { "Artist", (string)json.artist }
+        };
+    }
+  }
 }

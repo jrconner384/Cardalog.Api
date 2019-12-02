@@ -14,7 +14,7 @@ namespace Cardalog.Api
 {
   public static class WriteCard
   {
-    // See ./Seeds/mtg-cards.json for an example of the expected JSON
+    // See ./Seeds/mtg-cards.json for an example of useful JSON
     [FunctionName("WriteCard")]
     public static async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = "cards")] HttpRequest req,
@@ -47,28 +47,28 @@ namespace Cardalog.Api
     private static BsonDocument RequestJsonToBson(dynamic json)
     {
       return new BsonDocument
-        {
-            { "Title", (string)json.title },
-            { "Type", (string)json.type },
-            { "Subtype", (string)json.subtype },
-            { "Rarity", (string)json.rarity },
-            { "Cost", (string)json.cost },
-            { "ConvertedCost", (int?)json.convertedCost },
-            { "Text", (string)json.text },
-            { "FlavorText", (string)json.flavorText },
-            { "Power", (int?)json.power },
-            { "Toughness", (int?)json.toughness },
-            { "Expansion", new BsonDocument
-                {
-                    { "Name", (string)json.expansion.name },
-                    { "TotalCards", (int?)json.expansion.totalCards },
-                    { "Abbreviation", (string)json.expansion.abbreviation },
-                    { "Copyright", (string)json.expansion.copyright }
-                }
-            },
-            { "CardNumber", (int?)json.cardNumber },
-            { "Artist", (string)json.artist }
-        };
+      {
+        { "Title", (string)json.title },
+        { "Type", (string)json.type },
+        { "Subtype", (string)json.subtype },
+        { "Rarity", (string)json.rarity },
+        { "Cost", (string)json.cost },
+        { "ConvertedCost", (int?)json.convertedCost },
+        { "Text", (string)json.text },
+        { "FlavorText", (string)json.flavorText },
+        { "Power", (int?)json.power },
+        { "Toughness", (int?)json.toughness },
+        { "Expansion", new BsonDocument
+          {
+            { "Name", (string)json.expansion.name },
+            { "TotalCards", (int?)json.expansion.totalCards },
+            { "Abbreviation", (string)json.expansion.abbreviation },
+            { "Copyright", (string)json.expansion.copyright }
+          }
+        },
+        { "CardNumber", (int?)json.cardNumber },
+        { "Artist", (string)json.artist }
+      };
     }
   }
 }

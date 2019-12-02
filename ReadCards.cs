@@ -18,8 +18,8 @@ namespace Cardalog.Api
   {
     [FunctionName("ReadCards")]
     public static async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "cards")] HttpRequest req,
-        ILogger log)
+      [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "cards")] HttpRequest req,
+      ILogger log)
     {
       try
       {

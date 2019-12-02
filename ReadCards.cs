@@ -15,7 +15,7 @@ namespace Cardalog.Api
   // I've also updated local.settings.json to allow CORS.
   // Write seeds to Mongo with `mongoimport -d cardalog -c cards .\mtg-cards.json`.
   // Make sure the JSON is minified (on one line).
-  public static class Cards
+  public static class ReadCards
     {
         [FunctionName("ReadCards")]
         public static async Task<IActionResult> Run(

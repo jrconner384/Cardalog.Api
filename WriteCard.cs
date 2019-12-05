@@ -48,27 +48,40 @@ namespace Cardalog.Api
     {
       return new BsonDocument
       {
-        { "Title", (string)json.title },
-        { "Type", (string)json.type },
-        { "Subtype", (string)json.subtype },
-        { "Rarity", (string)json.rarity },
-        { "Cost", (string)json.cost },
-        { "ConvertedCost", (int?)json.convertedCost },
-        { "Text", (string)json.text },
-        { "FlavorText", (string)json.flavorText },
+        { "Title", (string)json.title ?? string.Empty },
+        { "Type", (string)json.type ?? string.Empty },
+        { "Subtype", (string)json.subtype ?? string.Empty },
+        { "Rarity", (string)json.rarity ?? string.Empty },
+        { "Cost", new BsonDocument
+          {
+            { "Blue", (int?)json.cost?.blue },
+            { "Black", (int?)json.cost?.black },
+            { "Colorless", (int?)json.cost?.colorless },
+            { "Converted", (int?)CalculateConvertedManaCost(json.cost) },
+            { "Green", (int?)json.cost?.green },
+            { "Red", (int?)json.cost?.red },
+            { "White", (int?)json.cost?.white }
+          }},
+        { "Text", (string)json.text ?? string.Empty },
+        { "FlavorText", (string)json.flavorText ?? string.Empty },
         { "Power", (int?)json.power },
         { "Toughness", (int?)json.toughness },
         { "Expansion", new BsonDocument
           {
-            { "Name", (string)json.expansion.name },
-            { "TotalCards", (int?)json.expansion.totalCards },
-            { "Abbreviation", (string)json.expansion.abbreviation },
-            { "Copyright", (string)json.expansion.copyright }
+            { "Name", (string)json.expansion?.name ?? string.Empty },
+            { "TotalCards", (int?)json.expansion?.totalCards },
+            { "Abbreviation", (string)json.expansion?.abbreviation ?? string.Empty },
+            { "Copyright", (string)json.expansion?.copyright ?? string.Empty }
           }
         },
         { "CardNumber", (int?)json.cardNumber },
-        { "Artist", (string)json.artist }
+        { "Artist", (string)json.artist ?? string.Empty }
       };
+    }
+
+    private static int? CalculateConvertedManaCost(dynamic cost)
+    {
+      return cost == null ? 0 : (int?)((int?)cost.blue + (int?)cost.black + (int?)cost.colorless + (int?)cost.green + (int?)cost.red + (int?)cost.white);
     }
   }
 }

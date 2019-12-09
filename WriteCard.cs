@@ -52,6 +52,7 @@ namespace Cardalog.Api
         { "Type", (string)json.type ?? string.Empty },
         { "Subtype", (string)json.subtype ?? string.Empty },
         { "Rarity", (string)json.rarity ?? string.Empty },
+        { "Condition", (string)json.condition ?? string.Empty },
         { "Cost", new BsonDocument
           {
             { "Blue", (int?)json.cost?.blue },

@@ -12,7 +12,7 @@ namespace Cardalog.Api
 {
   // Run with `func host start --cors *` to be able to access this from the web app.
   // I've also updated local.settings.json to allow CORS.
-  // Write seeds to Mongo with `mongoimport -d cardalog -c cards .\mtg-cards.json`.
+  // Write seeds to Mongo with `mongoimport -d cardalog -c cards .\mtg-cards.json --jsonArray`.
   // Make sure the JSON is minified (on one line).
   public static class ReadCards
   {

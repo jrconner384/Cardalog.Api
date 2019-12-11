@@ -23,7 +23,8 @@ namespace Cardalog.Api
     {
       try
       {
-        var client = new MongoClient("mongodb://127.0.0.1:27017");
+        var conn = System.Environment.GetEnvironmentVariable("AtlasConnString", EnvironmentVariableTarget.Process);
+        var client = new MongoClient(conn);
         var db = client.GetDatabase("cardalog");
         var coll = db.GetCollection<BsonDocument>("cards");
         var projection = Builders<BsonDocument>.Projection.Exclude("_id");
